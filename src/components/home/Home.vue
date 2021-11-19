@@ -13,7 +13,11 @@
             <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
                 <meu-painel :titulo="foto.titulo">
                     <imagem-responsiva :url="foto.url" :titulo="foto.titulo" />
-                    <meu-botao rotulo="Excluir" tipo="button" />
+                    <meu-botao
+                        @click.native="remove(foto)"
+                        rotulo="Excluir"
+                        tipo="button"
+                    />
                 </meu-painel>
             </li>
         </ul>
@@ -40,9 +44,7 @@ export default {
     },
 
     computed: {
-
         fotosComFiltro() {
-
             if (this.filtro) {
                 let exp = new RegExp(this.filtro.trim(), "i");
                 return this.fotos.filter((foto) => exp.test(foto.titulo));
@@ -53,10 +55,12 @@ export default {
     },
 
     methods: {
-	    remove(){
-			alert('Remover a foto');
-		}
-    }
+        remove(foto) {
+            if (confirm("Deseja realmente excluir a foto?")) {
+                alert("Remover a foto! " + foto.titulo);
+            }
+        },
+    },
 
     created() {
         let promise = this.$http.get("http://localhost:3000/v1/fotos");
